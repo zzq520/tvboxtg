@@ -1,0 +1,35 @@
+name: 每日同步上游仓库（北京时间23点）
+
+on:
+  schedule:
+    # UTC 时间 15:00 = 北京时间 23:00
+    - cron: "0 15 * * *"
+  workflow_dispatch: # 允许手动触发测试
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出仓库代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 拉取完整历史
+          persist-credentials: false
+
+      - name: 配置 Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: 添加上游仓库
+        run: |
+          # 把这里改成你要同步的**原始上游仓库**
+          UPSTREAM_URL="https://github.com/ls125781003/tvboxtg.git"
+          git remote add upstream $UPSTREAM_URL
+          git fetch upstream
+
+      - name: 合并上游 main 分支（可改成 master）
+        run: |
+          git checkout main
+          git merge --no-edit upstream/main
+          git push origin main
