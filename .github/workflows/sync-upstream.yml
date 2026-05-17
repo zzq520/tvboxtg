@@ -1,9 +1,9 @@
 name: 每日同步上游仓库（北京时间23点）
 
-on:
+于:
   schedule:
     # UTC 时间 15:00 = 北京时间 23:00
-    - cron: "0 15 * * *"
+    - cron: '0,30 * * * *'
   workflow_dispatch: # 允许手动触发测试
 
 jobs:
